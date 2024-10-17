@@ -1,4 +1,6 @@
-let sum=0;
-for(let i=2;i<process.argv.length;i++){
-sum+=(+process.argv[i]);}
+let sum = 0;
+let len = process.argv.length;
+for (let i = 2; i < len; i++) {
+  sum += +process.argv[i];
+}
 console.log(sum);

@@ -1,35 +1,35 @@
-const http = require('http');
-const bl = require('bl');
+const http = require("http");
+const bl = require("bl");
 
 const urls = process.argv.slice(2);
+const results = [];
+let count = 0;
 
-http.get(urls[0], (response) => {
-    response.pipe(bl((err, data) => {
+function printResults() {
+  for (let i = 0; i < urls.length; i++) {
+    console.log(results[i]);
+  }
+}
+
+function fetchUrl(index) {
+  http.get(urls[index], (response) => {
+    response.pipe(
+      bl((err, data) => {
         if (err) {
-        return console.error(err);
+          return console.error(err);
         }
-        data = data.toString();
-        console.log(data);
-        http.get(urls[1], (response) => {
-            response.pipe(bl((err, data) => {
-                if (err) {
-                return console.error(err);
-                }
-                data = data.toString();
-                console.log(data);
-                http.get(urls[2], (response) => {
-                    response.pipe(bl((err, data) => {
-                        if (err) {
-                        return console.error(err);
-                        }
-                        data = data.toString();
-                        console.log(data);
-                    }));
-                  });
-            }));
-          });
-    }));
-  });
 
-  
-  
+        results[index] = data.toString();
+        count++;
+
+        if (count === urls.length) {
+          printResults();
+        }
+      })
+    );
+  });
+}
+
+for (let i = 0; i < urls.length; i++) {
+  fetchUrl(i);
+}
